@@ -1,26 +1,24 @@
-﻿// Copyright (c) Wiesław Šoltés. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using Avalonia.Collections;
+using System.Text;
 
 namespace Avalonia.Xaml.Interactivity
 {
     /// <summary>
-    /// Represents a collection of <see cref="IAction"/>'s.
+    /// Represents a collection of <see cref="IAction"/>'s or <see cref="IAsyncAction"/>'s.
     /// </summary>
-    public sealed class ActionCollection : AvaloniaList<AvaloniaObject>
+    public sealed class AsyncActionCollection : Collections.AvaloniaList<AvaloniaObject>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActionCollection"/> class.
+        /// Initializes a new instance of the <see cref="AsyncActionCollection"/> class.
         /// </summary>
-        public ActionCollection()
+        public AsyncActionCollection()
         {
-            CollectionChanged += ActionCollection_CollectionChanged;
+            this.CollectionChanged += AsyncActionCollection_CollectionChanged;
         }
 
-        private void ActionCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
+        private void AsyncActionCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
         {
             NotifyCollectionChangedAction collectionChange = eventArgs.Action;
 
@@ -38,11 +36,11 @@ namespace Avalonia.Xaml.Interactivity
             }
         }
 
-        private static void VerifyType(AvaloniaObject item)
+        private void VerifyType(AvaloniaObject avaloniaObject)
         {
-            if (!(item is IAction))
+            if(!(avaloniaObject is IAsyncAction || avaloniaObject is IAction))
             {
-                throw new InvalidOperationException("Only IAction types are supported in an ActionCollection.");
+                throw new InvalidOperationException("Only IAction and IAsyncAction types are supported in an ActionCollection.");
             }
         }
     }

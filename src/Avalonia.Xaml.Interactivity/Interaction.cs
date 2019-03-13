@@ -123,7 +123,7 @@ namespace Avalonia.Xaml.Interactivity
         /// <param name="actions">The set of actions to execute.</param>
         /// <param name="parameter">The value of this parameter is determined by the calling behavior.</param>
         /// <returns>Returns the results of the actions.</returns>
-        public static async IAsyncEnumerable<object> ExecuteActionsAsync(object sender, ActionCollection actions, object parameter)
+        public static async IAsyncEnumerable<object> ExecuteActionsAsync(object sender, AsyncActionCollection actions, object parameter)
         {
             if(actions == null)
             {
