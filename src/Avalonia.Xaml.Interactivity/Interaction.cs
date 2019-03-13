@@ -104,11 +104,43 @@ namespace Avalonia.Xaml.Interactivity
 
             foreach (AvaloniaObject avaloniaObject in actions)
             {
-                IAction action = (IAction)avaloniaObject;
-                results.Add(action.Execute(sender, parameter));
+                if (avaloniaObject is IAction action)
+                {
+                    results.Add(action.Execute(sender, parameter));
+                }
+                else if (avaloniaObject is IAsyncAction)
+                {
+                    throw new InvalidOperationException($"{nameof(actions)} contians an asychronous action.  Please use ExecutActionsAsync");
+                }
             }
 
             return results;
+        }
+        /// <summary>
+        /// Executes all actions in the <see cref="ActionCollection"/> and returns their results asynchronously.
+        /// </summary>
+        /// <param name="sender">The <see cref="object"/> which will be passed on to the action.</param>
+        /// <param name="actions">The set of actions to execute.</param>
+        /// <param name="parameter">The value of this parameter is determined by the calling behavior.</param>
+        /// <returns>Returns the results of the actions.</returns>
+        public static async IAsyncEnumerable<object> ExecuteActionsAsync(object sender, ActionCollection actions, object parameter)
+        {
+            if(actions == null)
+            {
+                yield break;
+            }
+
+            foreach(AvaloniaObject avaloniaObject in actions)
+            {
+                if(avaloniaObject is IAction action)
+                {
+                    yield return action.Execute(sender, parameter);
+                }
+                else if(avaloniaObject is IAsyncAction asyncAction)
+                {
+                    yield return await asyncAction.Execute(sender, parameter);
+                }
+            }
         }
 
         private static void Control_Loaded(object sender, VisualTreeAttachmentEventArgs e)

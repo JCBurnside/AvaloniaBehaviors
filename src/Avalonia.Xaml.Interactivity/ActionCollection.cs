@@ -40,9 +40,9 @@ namespace Avalonia.Xaml.Interactivity
 
         private static void VerifyType(AvaloniaObject item)
         {
-            if (!(item is IAction))
+            if (!(item is IAction) && !(item is IAsyncAction))
             {
-                throw new InvalidOperationException("Only IAction types are supported in an ActionCollection.");
+                throw new InvalidOperationException("Only IAction and IAsyncAction types are supported in an ActionCollection.");
             }
         }
     }
