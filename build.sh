@@ -74,4 +74,4 @@ echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
 revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
-"$DOTNET_EXE" pack --project "$BUILD_PROJECT_FILE" -o ".\\artifacts" --version-suffix=$revision
+"$DOTNET_EXE" pack --project . -o ".\\artifacts" --version-suffix=$revision
