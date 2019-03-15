@@ -71,5 +71,6 @@ $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
 ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile -- $BuildArguments }
 
-foreach ($file in $(ls /src/**/*.csproj) 
+foreach ($file in $(ls /src/**/*.csproj)) {
     ExecSafe { & $env:DOTNET_EXE pack $file -c Release -o .\artifacts --version-suffix=$revision }
+}
