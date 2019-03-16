@@ -1,7 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core-nightly/sdk:3.0 AS base
 WORKDIR .
-
-FROM mcr.microsoft.com/dotnet/core-nightly/sdk:3.0 AS build
+FROM base AS build
 COPY AvaloniaBehaviors.sln .
 
 # Copy the main source project files
@@ -22,4 +21,5 @@ RUN for file in $(ls *.csproj); do mkdir -p samples/${file%.*}/ && mv $file samp
 RUN dotnet restore 
 COPY . .
 RUN dotnet build .
-RUN for file in $(ls /src/**/*.csproj); do dotnet pack $file --no-build --output artifacts --version-suffix "ci-async"; done
+RUN for file in $(ls /src/**/*.csproj); do dotnet pack $file --no-build --output nuget --version-suffix "ci-async"; done
+ENTRYPOINT ["cp", "/nuget/*.nupkg", "/artifacts"]
