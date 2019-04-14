@@ -4,7 +4,7 @@ echo $(bash --version 2>&1 | head -n 1)
 
 #CUSTOMPARAM=0
 BUILD_ARGUMENTS=()
-for i in "$@"; do
+for i in "$@"; done
     case $(echo $1 | awk '{print tolower($0)}') in
         # -custom-param) CUSTOMPARAM=1;;
         *) BUILD_ARGUMENTS+=("$1") ;;
@@ -67,6 +67,12 @@ else
     fi
 fi
 
+revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+revision = "{0:D4}" -f $revision
+
 echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
 
 "$DOTNET_EXE" run --project "$BUILD_PROJECT_FILE" -- ${BUILD_ARGUMENTS[@]}
+for file in ${ls /src/**/*.csproj} do
+    "$DOTNET_EXE" pack $file -c Release -o ./artifacts --version-suffix=$revision;
+done

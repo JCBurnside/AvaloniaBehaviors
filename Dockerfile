@@ -21,5 +21,8 @@ RUN for file in $(ls *.csproj); do mkdir -p samples/${file%.*}/ && mv $file samp
 RUN dotnet restore 
 COPY . .
 RUN dotnet build .
-RUN for file in $(ls /src/**/*.csproj); do dotnet pack $file --no-build --output nuget --version-suffix "ci-async"; done
-ENTRYPOINT ["cp", "/nuget/*.nupkg", "/artifacts"]
+RUN for file in $(ls /src/**/*.csproj); do dotnet pack $file --no-build --output /nuget/${file%.*} --version-suffix "ci-async"; done
+
+WORKDIR .
+COPY --from=base /nuget/**/*.* /nuget
+ENTRYPOINT ["dotnet", "pack", ".", "--no-build", "--output", "/artifacts", "--version-suffix", "'ci-async'"]
